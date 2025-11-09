@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from logger import logger
+from utils_logs import logger
 from google.cloud import run_v2
 import os
 
