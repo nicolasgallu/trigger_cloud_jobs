@@ -6,7 +6,7 @@ import os
 app = Flask(__name__)
 client = run_v2.JobsClient()
 
-PORT = os.getenv("PORT")
+PORT = os.getenv("$PORT")
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 REGION = os.getenv("CLOUD_RUN_REGION")
 JOB_NAME = os.getenv("JOB_NAME")
