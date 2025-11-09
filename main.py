@@ -13,30 +13,17 @@ JOB_FULL_NAME = f"projects/{PROJECT_ID}/locations/{REGION}/jobs/{JOB_NAME}"
 @app.route('/run-scraper', methods=['POST'])
 def run_scraper():
     try:
-        request_json = request.get_json(silent=True)
+        # No need to parse request_json if the job doesn't take args
         
-        # Extract parameters for the job from the request body
-        # For example, if your job expects a 'url' argument
-        job_args = []
-        if request_json and 'url' in request_json:
-            job_args.append(request_json['url'])
-        else:
-            # Provide a default or handle cases where no URL is given
-            job_args.append("https://www.google.com") 
-        
-        # Create a JobExecution object
+        # Create a JobExecution request without overrides if no args are needed
         job_execution_request = run_v2.RunJobRequest(
-            name=JOB_FULL_NAME,
-            overrides=run_v2.RunJobRequest.Overrides(
-                args=job_args # Pass arguments to your job
-            )
+            name=JOB_FULL_NAME
+            # No 'overrides' needed if your job doesn't take dynamic arguments
         )
 
-        print(f"Attempting to execute Cloud Run Job: {JOB_FULL_NAME} with args: {job_args}")
+        print(f"Attempting to execute Cloud Run Job: {JOB_FULL_NAME} (no specific args)")
         operation = client.run_job(request=job_execution_request)
         
-        # The operation is long-running, but we don't need to wait for it here.
-        # We just confirm it started.
         print(f"Cloud Run Job execution started: {operation.name}")
 
         return jsonify({"status": "Cloud Run Job execution initiated", "operation_name": operation.name}), 202
