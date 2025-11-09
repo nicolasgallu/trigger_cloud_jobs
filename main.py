@@ -9,6 +9,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 REGION = os.getenv("CLOUD_RUN_REGION")
 JOB_NAME = os.getenv("JOB_NAME")
 JOB_FULL_NAME = f"projects/{PROJECT_ID}/locations/{REGION}/jobs/{JOB_NAME}"
+print(JOB_FULL_NAME)
 
 @app.route('/run-scraper', methods=['POST'])
 def run_scraper():
