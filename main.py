@@ -1,15 +1,20 @@
 from flask import Flask, request, jsonify
 from google.cloud import run_v2
 import os
-
+print("STARTING")
 app = Flask(__name__)
 client = run_v2.JobsClient()
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+print(f"PROJECTID {PROJECT_ID}")
 REGION = os.getenv("CLOUD_RUN_REGION")
+print(f"REGION {REGION}")
 JOB_NAME = os.getenv("JOB_NAME")
+print(f"JOB_NAME {JOB_NAME}")
 JOB_FULL_NAME = f"projects/{PROJECT_ID}/locations/{REGION}/jobs/{JOB_NAME}"
 print(JOB_FULL_NAME)
+
+print("VENV READED")
 
 @app.route('/run-scraper', methods=['POST'])
 def run_scraper():
@@ -34,4 +39,4 @@ def run_scraper():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 8080)))
+    app.run(host='0.0.0.0', port=8081)
