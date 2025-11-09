@@ -6,8 +6,8 @@ import os
 app = Flask(__name__)
 client = run_v2.JobsClient()
 
-FLASK_PORT = os.getenv("FLASK_PORT")
-print(f"THE PORT IS:{FLASK_PORT}")
+PORT =  int(os.environ.get("PORT"))
+print(f"THE PORT IS:{PORT}")
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 REGION = os.getenv("CLOUD_RUN_REGION")
 JOB_NAME = os.getenv("JOB_NAME")
@@ -36,4 +36,4 @@ def run_scraper():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=FLASK_PORT)
+    app.run(host='0.0.0.0', port=PORT)
