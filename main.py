@@ -1,20 +1,17 @@
 from flask import Flask, request, jsonify
+from logger import logger
 from google.cloud import run_v2
 import os
-print("STARTING")
+
 app = Flask(__name__)
 client = run_v2.JobsClient()
 
+PORT = os.getenv("PORT")
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-print(f"PROJECTID {PROJECT_ID}")
 REGION = os.getenv("CLOUD_RUN_REGION")
-print(f"REGION {REGION}")
 JOB_NAME = os.getenv("JOB_NAME")
-print(f"JOB_NAME {JOB_NAME}")
 JOB_FULL_NAME = f"projects/{PROJECT_ID}/locations/{REGION}/jobs/{JOB_NAME}"
-print(JOB_FULL_NAME)
 
-print("VENV READED")
 
 @app.route('/run-scraper', methods=['POST'])
 def run_scraper():
@@ -27,16 +24,15 @@ def run_scraper():
             # No 'overrides' needed if your job doesn't take dynamic arguments
         )
 
-        print(f"Attempting to execute Cloud Run Job: {JOB_FULL_NAME} (no specific args)")
+        logger.info(f"Attempting to execute Cloud Run Job: {JOB_FULL_NAME}")
         operation = client.run_job(request=job_execution_request)
-        
-        print(f"Cloud Run Job execution started: {operation.name}")
-
+    
+        logger.info(f"Cloud Run Job execution started: {operation.name}")
         return jsonify({"status": "Cloud Run Job execution initiated", "operation_name": operation.name}), 202
 
     except Exception as e:
-        print(f"Error initiating Cloud Run Job: {e}")
+        logger.error(f"Error initiating Cloud Run Job: {e}")
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8081)
+    app.run(host='0.0.0.0', port=PORT)
